@@ -1,0 +1,16 @@
+# portcontext demo — paste these one line at a time while recording.
+# Story: set up your AI context ONCE, then export it to any tool.
+
+# 1. Start fresh
+portcontext init --owner "Sajee"
+
+# 2. Teach it who you are and how you work
+portcontext add --section identity --text "Sajee - Product Manager at Microsoft, working on Azure Cosmos DB"
+portcontext add --section preferences --text "TypeScript, strict mode, no default exports"
+portcontext add --section project --text "Building portcontext + why-graph as open-source sponsor projects"
+
+# 3. See everything you've captured
+portcontext list
+
+# 4. Export to EVERY tool at once (one input -> four files)
+portcontext export --to all

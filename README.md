@@ -49,22 +49,35 @@ portcontext add --section project --text "API base URL comes from API_BASE_URL e
 # 3. See what you've captured
 portcontext list
 
-# 4. Export it to any tool
-portcontext export --to markdown --out AGENTS.md   # drop into Copilot / Cursor / Claude
-portcontext export --to json                       # the canonical, portable format
+# 4. Export it to every AI tool at once
+portcontext export --to all
+#   -> AGENTS.md
+#   -> .github/copilot-instructions.md
+#   -> .cursor/rules/portcontext.mdc
+#   -> CLAUDE.md
+
+# ...or one tool at a time
+portcontext export --to copilot
+portcontext export --to json           # the canonical, portable format
+
+# Already have an instructions file? Pull it in.
+portcontext import --from AGENTS.md
 ```
 
 ## Concepts
 
 - **Canonical file** — a single `context.json` you own and can commit, sync, or back up.
 - **Sections** — `identity`, `preferences`, `project`, `style`, `other`.
-- **Adapters** — render the canonical file into a tool's expected format. Ships
-  with `markdown` (AGENTS.md-style instructions) and `json`.
+- **Adapters** — render the canonical file into each tool's expected format.
+  Ships with `markdown` (AGENTS.md), `copilot`, `cursor`, `claude`, and `json`.
+  `export --to all` writes every tool's file to its conventional path in one command.
+- **Import** — parse an existing `AGENTS.md`-style file back into your context so
+  you can adopt portcontext without starting from scratch.
 
 ## Roadmap
 
-- [ ] More adapters: Copilot `.github/copilot-instructions.md`, Cursor rules, Claude memory
-- [ ] `import` from existing tool config files
+- [x] Adapters for Copilot, Cursor, and Claude
+- [x] `import` from existing instruction files
 - [ ] Encrypted, opt-in sync between machines
 - [ ] Per-entry scoping (global vs. per-project)
 - [ ] VS Code extension

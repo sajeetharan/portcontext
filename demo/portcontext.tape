@@ -19,21 +19,23 @@ Type "Remove-Item -Recurse -Force .portcontext -ErrorAction SilentlyContinue; Cl
 Show
 
 Type "# Set up your AI context once..." Sleep 800ms Enter
-Type "portcontext init --owner ""Jane Dev""" Sleep 400ms Enter
+Type "portcontext init --owner ""Sajee""" Sleep 400ms Enter
 Sleep 1s
 
-Type "# Add facts about how you work" Sleep 600ms Enter
-Type "portcontext add --section preferences --text ""Prefer TypeScript, strict mode""" Sleep 300ms Enter
-Sleep 800ms
-Type "portcontext add --section style --text ""2-space indent, trailing commas"" --tags formatting" Sleep 300ms Enter
+Type "# Teach it who you are and how you work" Sleep 600ms Enter
+Type "portcontext add --section identity --text ""Sajee - PM at Microsoft, Azure Cosmos DB""" Sleep 300ms Enter
+Sleep 700ms
+Type "portcontext add --section preferences --text ""TypeScript, strict mode""" Sleep 300ms Enter
+Sleep 700ms
+Type "portcontext add --section project --text ""Building portcontext + why-graph (open-source)""" Sleep 300ms Enter
 Sleep 1s
 
 Type "# Review it" Sleep 600ms Enter
 Type "portcontext list" Sleep 300ms Enter
 Sleep 1500ms
 
-Type "# Export to any tool (Copilot / Cursor / Claude)" Sleep 600ms Enter
-Type "portcontext export --to markdown" Sleep 300ms Enter
+Type "# Export to EVERY tool at once" Sleep 600ms Enter
+Type "portcontext export --to all" Sleep 300ms Enter
 Sleep 3s
 
 # Clean up
