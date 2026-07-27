@@ -2,6 +2,8 @@
 
 **Portable, user-owned AI context that carries across tools.**
 
+![portcontext demo](demo/portcontext.gif)
+
 Every AI tool — GitHub Copilot, Cursor, Claude, ChatGPT — keeps its own siloed
 memory of who you are and how you work. There's no standard, user-owned "context
 passport" you can carry *between* tools. `portcontext` is that missing layer:

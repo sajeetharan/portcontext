@@ -1,10 +1,21 @@
 #!/usr/bin/env node
-import { writeFile } from "node:fs/promises";
+import { writeFile, readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import { loadContext, saveContext, emptyContext, DEFAULT_PATH } from "./store.js";
 import { toMarkdown } from "./adapters/markdown.js";
 import { toJson } from "./adapters/json.js";
 import { makeId } from "./util.js";
 import type { ContextSection } from "./schema.js";
+
+async function version(): Promise<string> {
+  try {
+    const pkgUrl = new URL("../package.json", import.meta.url);
+    const pkg = JSON.parse(await readFile(fileURLToPath(pkgUrl), "utf8"));
+    return pkg.version ?? "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
 
 const SECTIONS: ContextSection[] = [
   "identity",
@@ -41,6 +52,15 @@ Usage:
   portcontext remove --id <id>
   portcontext export --to <markdown|json> [--out <file>]
 
+Examples:
+  portcontext init --owner "Jane Dev"
+  portcontext add --section preferences --text "Prefer TypeScript, strict mode"
+  portcontext export --to markdown --out AGENTS.md
+
+Options:
+  -h, --help      Show this help
+  -v, --version   Show version
+
 Context file: ${DEFAULT_PATH}
 `);
 }
@@ -49,10 +69,20 @@ async function main(): Promise<void> {
   const [cmd, ...rest] = process.argv.slice(2);
   const opts = flags(rest);
 
+  if (cmd === "--version" || cmd === "-v") {
+    console.log(await version());
+    return;
+  }
+  if (cmd === "--help" || cmd === "-h") {
+    help();
+    return;
+  }
+
   switch (cmd) {
     case "init": {
       await saveContext(emptyContext(opts.owner));
       console.log(`Initialized ${DEFAULT_PATH}`);
+      console.log('Next: portcontext add --section preferences --text "..."');
       break;
     }
 
@@ -80,7 +110,7 @@ async function main(): Promise<void> {
         createdAt: new Date().toISOString(),
       });
       await saveContext(ctx);
-      console.log("Added entry.");
+      console.log(`Added entry to "${section}".`);
       break;
     }
 
@@ -90,7 +120,11 @@ async function main(): Promise<void> {
         ? ctx.entries.filter((e) => e.section === opts.section)
         : ctx.entries;
       if (entries.length === 0) {
-        console.log("No entries.");
+        console.log(
+          opts.section
+            ? `No entries in section "${opts.section}".`
+            : "No entries yet. Add one with: portcontext add --section preferences --text \"...\"",
+        );
         break;
       }
       for (const e of entries) {
