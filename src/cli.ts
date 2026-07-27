@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { writeFile, readFile, mkdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { loadContext, saveContext, emptyContext, DEFAULT_PATH } from "./store.js";
@@ -177,7 +178,10 @@ async function main(): Promise<void> {
       const writeTarget = async (key: string, path: string) => {
         const output = TARGETS[key].render(ctx);
         const text = output.endsWith("\n") ? output : output + "\n";
-        await mkdir(dirname(path), { recursive: true });
+        const dir = dirname(path);
+        if (dir && !existsSync(dir)) {
+          await mkdir(dir, { recursive: true });
+        }
         await writeFile(path, text, "utf8");
         console.log(`Wrote ${path} (${key})`);
       };

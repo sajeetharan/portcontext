@@ -1,19 +1,20 @@
-# portcontext demo — paste these one line at a time while recording.
-# Story: set up your AI context ONCE, then export it to any tool.
+# portcontext demo — paste ONE line at a time while recording.
+# Keep it tight: ~6 commands, no typos. Story = set context once, export everywhere.
+
+# 0. Reset so the recording starts clean (run BEFORE you hit record; don't film this)
+Remove-Item -Recurse -Force .portcontext -ErrorAction SilentlyContinue; Clear-Host
 
 # 1. Start fresh
 portcontext init --owner "Sajee"
 
 # 2. Teach it who you are and how you work
-portcontext add --section identity --text "Sajee - Product Manager at Microsoft, working on Azure Cosmos DB"
+portcontext add --section identity --text "Sajee - PM at Microsoft, Azure Cosmos DB"
 portcontext add --section preferences --text "TypeScript, strict mode, no default exports"
-portcontext add --section project --text "Building portcontext + why-graph as open-source sponsor projects"
 
-# 3. See everything you've captured
+# 3. See what you've captured
 portcontext list
 
-# 4. Export to EVERY tool at once (one input -> four files)
+# 4. Export to every tool at once (one input -> four files)
 portcontext export --to all
 
-# 5. (bonus) Never let them drift again - regenerate on every commit
-portcontext install-hook
+# --- stop recording here ---
