@@ -1,25 +1,41 @@
 # portcontext
 
-**Portable, user-owned AI context that carries across tools.**
+**Your personal AI context — owned by you, portable across every tool and machine.**
+
+[![npm version](https://img.shields.io/npm/v/portcontext.svg)](https://www.npmjs.com/package/portcontext)
+[![npm downloads](https://img.shields.io/npm/dw/portcontext.svg)](https://www.npmjs.com/package/portcontext)
+[![GitHub stars](https://img.shields.io/github/stars/sajeetharan/portcontext.svg?style=social)](https://github.com/sajeetharan/portcontext)
+[![license](https://img.shields.io/npm/l/portcontext.svg)](LICENSE)
 
 ![portcontext demo](demo/portcontext.gif)
 
 Every AI tool — GitHub Copilot, Cursor, Claude, ChatGPT — keeps its own siloed
 memory of who you are and how you work. There's no standard, user-owned "context
-passport" you can carry *between* tools. `portcontext` is that missing layer:
-you describe your preferences, project facts, and coding style **once**, keep it
-in a plain file you own, and export it to whatever tool you're using today.
+passport" you can carry *between* tools **and between machines**. `portcontext`
+is that missing layer: you describe your preferences, project facts, and coding
+style **once**, keep it in a plain file you own, and take it everywhere.
 
 > Set up your context once. Take it everywhere.
 
 ---
 
-## Why this doesn't exist yet
+## How this is different
 
-Tool vendors have no incentive to interoperate — your context is their lock-in.
-`portcontext` is deliberately independent and open so the format stays
-user-owned and portable. That's exactly the kind of project sponsorship keeps
-alive.
+There are good tools — like [Ruler](https://github.com/intellectronica/ruler)
+and [rulesync](https://github.com/dyoshikawa/rulesync) — that generate
+*per-project, per-team rule files* for many coding agents. `portcontext`
+solves a different problem:
+
+- **Personal, not per-project.** It's about *you* — your identity, preferences,
+  and working style — not a repo's team conventions. One context follows you
+  into every project.
+- **Portable across machines.** Your context lives in a single file you own and
+  can `sync` over any git remote, so a new laptop knows how you work in seconds.
+- **Live via MCP, not just files.** The bundled `portcontext-mcp` server lets
+  agents read *and enrich* your context at runtime — no generated files to drift.
+
+It still exports the usual `AGENTS.md` / Copilot / Cursor / Claude files when you
+want them — but the source of truth is *yours*, and it travels with you.
 
 ## Install
 

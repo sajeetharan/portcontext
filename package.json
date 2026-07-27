@@ -28,6 +28,15 @@
     "claude",
     "agents"
   ],
+  "author": "sajeetharan",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sajeetharan/portcontext.git"
+  },
+  "homepage": "https://github.com/sajeetharan/portcontext#readme",
+  "bugs": {
+    "url": "https://github.com/sajeetharan/portcontext/issues"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=18"
