@@ -1,0 +1,50 @@
+{
+  "name": "portcontext-vscode",
+  "displayName": "portcontext",
+  "description": "Manage your portable, user-owned AI context from VS Code.",
+  "version": "0.1.0",
+  "publisher": "sajeetharan",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "portcontext.addEntry",
+        "title": "portcontext: Add Context Entry"
+      },
+      {
+        "command": "portcontext.exportAll",
+        "title": "portcontext: Export to All Tools"
+      },
+      {
+        "command": "portcontext.import",
+        "title": "portcontext: Import (auto-detect)"
+      },
+      {
+        "command": "portcontext.list",
+        "title": "portcontext: List Entries"
+      },
+      {
+        "command": "portcontext.sync",
+        "title": "portcontext: Sync (push/pull)"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.5.0"
+  }
+}

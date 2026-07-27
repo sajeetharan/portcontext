@@ -72,16 +72,21 @@ portcontext import --from AGENTS.md
   Ships with `markdown` (AGENTS.md), `copilot`, `cursor`, `claude`, and `json`.
   `export --to all` writes every tool's file to its conventional path in one command.
 - **Import** — parse an existing `AGENTS.md`-style file back into your context so
-  you can adopt portcontext without starting from scratch.
+  you can adopt portcontext without starting from scratch. Run `import` with no
+  arguments to auto-detect Copilot/Cursor/Claude/AGENTS files in the current folder.
+- **Sync** — back up and share your context across machines via any git remote
+  (`portcontext sync setup --remote <url>`, then `push` / `pull`).
+- **VS Code extension** — manage all of the above from the Command Palette. See
+  [extension/](extension/).
 
 ## Roadmap
 
 - [x] Adapters for Copilot, Cursor, and Claude
 - [x] `import` from existing instruction files (with auto-detect)
 - [x] Sync between machines (git-based)
+- [x] VS Code extension ([extension/](extension/))
 - [ ] Encrypted, opt-in sync
 - [ ] Per-entry scoping (global vs. per-project)
-- [ ] VS Code extension
 
 ## Programmatic use
 
