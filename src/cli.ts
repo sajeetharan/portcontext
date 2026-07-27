@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { loadContext, saveContext, emptyContext, DEFAULT_PATH } from "./store.js";
 import { fromMarkdown } from "./adapters/markdown.js";
 import { TARGETS, ALL_TOOL_TARGETS } from "./adapters/tools.js";
+import { discoverContextFiles } from "./discover.js";
 import { makeId } from "./util.js";
 import type { ContextSection } from "./schema.js";
 
@@ -52,14 +53,15 @@ Usage:
   portcontext list [--section <name>]
   portcontext remove --id <id>
   portcontext export --to <markdown|json|copilot|cursor|claude|all> [--out <file>]
-  portcontext import --from <file> [--section <name>]
+  portcontext import [--from <file>] [--section <name>] [--dry-run]
 
 Examples:
   portcontext init --owner "Jane Dev"
   portcontext add --section preferences --text "Prefer TypeScript, strict mode"
   portcontext export --to all              # write every tool's file at once
   portcontext export --to copilot          # .github/copilot-instructions.md
-  portcontext import --from AGENTS.md       # pull an existing file into context
+  portcontext import                        # auto-detect & pull existing files
+  portcontext import --from AGENTS.md       # import one specific file
 
 Export targets & default paths:
   markdown -> AGENTS.md
@@ -196,39 +198,84 @@ async function main(): Promise<void> {
     }
 
     case "import": {
-      if (!opts.from) {
-        console.error("--from <file> is required");
-        process.exit(1);
-      }
-      let raw: string;
-      try {
-        raw = await readFile(opts.from, "utf8");
-      } catch {
-        console.error(`Could not read file: ${opts.from}`);
-        process.exit(1);
-      }
-      const parsed = fromMarkdown(raw);
-      if (parsed.length === 0) {
-        console.log("No entries found to import.");
-        break;
-      }
       const override = opts.section as ContextSection | undefined;
       if (override && !SECTIONS.includes(override)) {
         console.error(`Invalid --section. Use one of: ${SECTIONS.join(", ")}`);
         process.exit(1);
       }
+      const dryRun = opts["dry-run"] === "true" || opts.dry === "true";
+
+      // Determine which files to import: explicit --from, or auto-detect.
+      let files: string[];
+      if (opts.from) {
+        files = [opts.from];
+      } else {
+        files = discoverContextFiles();
+        if (files.length === 0) {
+          console.log(
+            "No instruction files found here. Looked for: AGENTS.md, .github/copilot-instructions.md, CLAUDE.md, .cursorrules, .cursor/rules/*.mdc",
+          );
+          console.log("Tip: point at a specific file with --from <file>.");
+          break;
+        }
+        console.log(`Found ${files.length} file(s): ${files.join(", ")}`);
+      }
+
       const ctx = await loadContext();
-      for (const p of parsed) {
-        ctx.entries.push({
-          id: makeId("e_"),
-          section: override ?? p.section,
-          text: p.text,
-          tags: p.tags,
-          createdAt: new Date().toISOString(),
-        });
+      const seen = new Set(
+        ctx.entries.map((e) => `${e.section}\u0000${e.text}`),
+      );
+      let added = 0;
+      let skipped = 0;
+
+      for (const file of files) {
+        let raw: string;
+        try {
+          raw = await readFile(file, "utf8");
+        } catch {
+          console.error(`Could not read file: ${file}`);
+          if (opts.from) process.exit(1);
+          continue;
+        }
+        const parsed = fromMarkdown(raw);
+        let fileAdded = 0;
+        for (const p of parsed) {
+          const section = override ?? p.section;
+          const key = `${section}\u0000${p.text}`;
+          if (seen.has(key)) {
+            skipped++;
+            continue;
+          }
+          seen.add(key);
+          fileAdded++;
+          added++;
+          if (!dryRun) {
+            ctx.entries.push({
+              id: makeId("e_"),
+              section,
+              text: p.text,
+              tags: p.tags,
+              createdAt: new Date().toISOString(),
+            });
+          }
+        }
+        console.log(`  ${file}: ${fileAdded} new`);
+      }
+
+      if (dryRun) {
+        console.log(
+          `Dry run: would import ${added} new entr${added === 1 ? "y" : "ies"} (${skipped} duplicate(s) skipped). Nothing written.`,
+        );
+        break;
+      }
+      if (added === 0) {
+        console.log(`Nothing to import (${skipped} duplicate(s) skipped).`);
+        break;
       }
       await saveContext(ctx);
-      console.log(`Imported ${parsed.length} entr${parsed.length === 1 ? "y" : "ies"} from ${opts.from}.`);
+      console.log(
+        `Imported ${added} new entr${added === 1 ? "y" : "ies"}${skipped ? `, skipped ${skipped} duplicate(s)` : ""}.`,
+      );
       break;
     }
 
