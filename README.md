@@ -62,7 +62,27 @@ portcontext export --to json           # the canonical, portable format
 
 # Already have an instructions file? Pull it in.
 portcontext import --from AGENTS.md
+
+# Never let the files drift: regenerate them on every commit.
+portcontext install-hook
 ```
+
+## Live access via MCP
+
+Instead of generating files, let an MCP-capable agent read your context at
+runtime. Point your MCP client at the `portcontext-mcp` server:
+
+```json
+{
+  "mcpServers": {
+    "portcontext": { "command": "portcontext-mcp" }
+  }
+}
+```
+
+It exposes `get_context`, `list_entries`, `add_entry`, and `export` — so agents
+can read *and* enrich your context directly, with no file drift.
+
 
 ## Concepts
 
@@ -76,15 +96,18 @@ portcontext import --from AGENTS.md
   arguments to auto-detect Copilot/Cursor/Claude/AGENTS files in the current folder.
 - **Sync** — back up and share your context across machines via any git remote
   (`portcontext sync setup --remote <url>`, then `push` / `pull`).
-- **VS Code extension** — manage all of the above from the Command Palette. See
-  [extension/](extension/).
+- **Auto-sync hook** — `portcontext install-hook` adds a git pre-commit hook so
+  your tool files are regenerated on every commit and never drift.
+- **MCP server** — `portcontext-mcp` exposes your context to any MCP-capable
+  agent (Copilot, Claude, Cursor) live at runtime — no file generation needed.
 
 ## Roadmap
 
 - [x] Adapters for Copilot, Cursor, and Claude
 - [x] `import` from existing instruction files (with auto-detect)
 - [x] Sync between machines (git-based)
-- [x] VS Code extension ([extension/](extension/))
+- [x] Git pre-commit hook (`install-hook`) so files never drift
+- [x] MCP server for live, runtime context access
 - [ ] Encrypted, opt-in sync
 - [ ] Per-entry scoping (global vs. per-project)
 

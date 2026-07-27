@@ -7,6 +7,7 @@ import { fromMarkdown } from "./adapters/markdown.js";
 import { TARGETS, ALL_TOOL_TARGETS } from "./adapters/tools.js";
 import { discoverContextFiles } from "./discover.js";
 import { syncSetup, syncPush, syncPull, syncStatus } from "./sync.js";
+import { installHook } from "./hook.js";
 import { makeId } from "./util.js";
 import type { ContextSection } from "./schema.js";
 
@@ -56,6 +57,7 @@ Usage:
   portcontext export --to <markdown|json|copilot|cursor|claude|all> [--out <file>]
   portcontext import [--from <file>] [--section <name>] [--dry-run]
   portcontext sync <setup|push|pull|status> [--remote <git-url>] [--message <msg>]
+  portcontext install-hook
 
 Examples:
   portcontext init --owner "Jane Dev"
@@ -67,6 +69,7 @@ Examples:
   portcontext sync setup --remote git@github.com:you/my-context.git
   portcontext sync push                     # back up / share your context
   portcontext sync pull                     # get it on another machine
+  portcontext install-hook                  # regenerate tool files on every commit
 
 Export targets & default paths:
   markdown -> AGENTS.md
@@ -308,6 +311,16 @@ async function main(): Promise<void> {
             console.error("Usage: portcontext sync <setup|push|pull|status>");
             process.exit(1);
         }
+      } catch (err) {
+        console.error((err as Error).message);
+        process.exit(1);
+      }
+      break;
+    }
+
+    case "install-hook": {
+      try {
+        console.log(await installHook());
       } catch (err) {
         console.error((err as Error).message);
         process.exit(1);

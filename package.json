@@ -4,7 +4,8 @@
   "description": "Portable, user-owned AI context that carries across tools (Copilot, Cursor, Claude, ...).",
   "type": "module",
   "bin": {
-    "portcontext": "dist/cli.js"
+    "portcontext": "dist/cli.js",
+    "portcontext-mcp": "dist/mcp.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,5 +35,8 @@
   "devDependencies": {
     "@types/node": "^20.11.0",
     "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
   }
 }

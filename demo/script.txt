@@ -14,3 +14,6 @@ portcontext list
 
 # 4. Export to EVERY tool at once (one input -> four files)
 portcontext export --to all
+
+# 5. (bonus) Never let them drift again - regenerate on every commit
+portcontext install-hook

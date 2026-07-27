@@ -12,3 +12,4 @@ export {
 export type { ExportTarget } from "./adapters/tools.js";
 export { discoverContextFiles, KNOWN_FILES } from "./discover.js";
 export { syncSetup, syncPush, syncPull, syncStatus, syncDir } from "./sync.js";
+export { installHook } from "./hook.js";
