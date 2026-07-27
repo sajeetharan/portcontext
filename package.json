@@ -1,0 +1,38 @@
+{
+  "name": "portcontext",
+  "version": "0.1.0",
+  "description": "Portable, user-owned AI context that carries across tools (Copilot, Cursor, Claude, ...).",
+  "type": "module",
+  "bin": {
+    "portcontext": "dist/cli.js"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "ai",
+    "context",
+    "memory",
+    "portable",
+    "copilot",
+    "cursor",
+    "claude",
+    "agents"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.5.0"
+  }
+}

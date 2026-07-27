@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "owner": "Jane Dev",
+  "updatedAt": "2026-07-27T00:00:00.000Z",
+  "entries": [
+    {
+      "id": "e_example1",
+      "section": "preferences",
+      "text": "Prefer TypeScript with strict mode; avoid default exports.",
+      "createdAt": "2026-07-27T00:00:00.000Z"
+    },
+    {
+      "id": "e_example2",
+      "section": "style",
+      "text": "Use 2-space indentation and trailing commas.",
+      "tags": ["formatting"],
+      "createdAt": "2026-07-27T00:00:00.000Z"
+    },
+    {
+      "id": "e_example3",
+      "section": "project",
+      "text": "The API base URL is configured via the API_BASE_URL env var.",
+      "createdAt": "2026-07-27T00:00:00.000Z"
+    }
+  ]
+}
