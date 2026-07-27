@@ -6,6 +6,7 @@ import { loadContext, saveContext, emptyContext, DEFAULT_PATH } from "./store.js
 import { fromMarkdown } from "./adapters/markdown.js";
 import { TARGETS, ALL_TOOL_TARGETS } from "./adapters/tools.js";
 import { discoverContextFiles } from "./discover.js";
+import { syncSetup, syncPush, syncPull, syncStatus } from "./sync.js";
 import { makeId } from "./util.js";
 import type { ContextSection } from "./schema.js";
 
@@ -54,6 +55,7 @@ Usage:
   portcontext remove --id <id>
   portcontext export --to <markdown|json|copilot|cursor|claude|all> [--out <file>]
   portcontext import [--from <file>] [--section <name>] [--dry-run]
+  portcontext sync <setup|push|pull|status> [--remote <git-url>] [--message <msg>]
 
 Examples:
   portcontext init --owner "Jane Dev"
@@ -62,6 +64,9 @@ Examples:
   portcontext export --to copilot          # .github/copilot-instructions.md
   portcontext import                        # auto-detect & pull existing files
   portcontext import --from AGENTS.md       # import one specific file
+  portcontext sync setup --remote git@github.com:you/my-context.git
+  portcontext sync push                     # back up / share your context
+  portcontext sync pull                     # get it on another machine
 
 Export targets & default paths:
   markdown -> AGENTS.md
@@ -276,6 +281,37 @@ async function main(): Promise<void> {
       console.log(
         `Imported ${added} new entr${added === 1 ? "y" : "ies"}${skipped ? `, skipped ${skipped} duplicate(s)` : ""}.`,
       );
+      break;
+    }
+
+    case "sync": {
+      const sub = rest[0] && !rest[0].startsWith("--") ? rest[0] : undefined;
+      try {
+        switch (sub) {
+          case "setup": {
+            for (const line of await syncSetup(opts.remote)) console.log(line);
+            break;
+          }
+          case "push": {
+            console.log(await syncPush(opts.message));
+            break;
+          }
+          case "pull": {
+            console.log(await syncPull());
+            break;
+          }
+          case "status": {
+            for (const line of await syncStatus()) console.log(line);
+            break;
+          }
+          default:
+            console.error("Usage: portcontext sync <setup|push|pull|status>");
+            process.exit(1);
+        }
+      } catch (err) {
+        console.error((err as Error).message);
+        process.exit(1);
+      }
       break;
     }
 

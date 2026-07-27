@@ -77,8 +77,9 @@ portcontext import --from AGENTS.md
 ## Roadmap
 
 - [x] Adapters for Copilot, Cursor, and Claude
-- [x] `import` from existing instruction files
-- [ ] Encrypted, opt-in sync between machines
+- [x] `import` from existing instruction files (with auto-detect)
+- [x] Sync between machines (git-based)
+- [ ] Encrypted, opt-in sync
 - [ ] Per-entry scoping (global vs. per-project)
 - [ ] VS Code extension
 
